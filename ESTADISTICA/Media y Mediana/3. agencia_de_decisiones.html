@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agencia de Decisiones: Casos de la Vida Real</title>
+    <!-- Tailwind CSS para el diseño -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para los gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #f5f3ff; /* Fondo violeta muy claro */
+            background-image: radial-gradient(#ddd6fe 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .exercise-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .feedback {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .correct { color: #4c1d95; background-color: #ede9fe; border-color: #c4b5fd; }
+        .incorrect { color: #9f1239; background-color: #ffe4e6; border-color: #fecdd3; }
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 300px; }
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="bg-white rounded-3xl p-8 shadow-lg mb-8 border-t-8 border-violet-600 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-500 mb-4">
+                💼 Agencia de Decisiones
+            </h1>
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">Misión: La Vida Real</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                ¡Bienvenida a tu primer día como Consultora de Datos! Las personas vendrán a ti con problemas de la vida diaria. Ya sabes calcular y leer gráficas, pero ahora debes **decidir** qué herramienta usar: ¿El Promedio o la Mediana?
+            </p>
+            
+            <div class="bg-amber-50 p-5 rounded-2xl border border-amber-200 text-left shadow-inner">
+                <h3 class="font-bold text-amber-800 text-xl mb-3"><i class="fas fa-lightbulb"></i> El Secreto de los Expertos</h3>
+                <ul class="list-disc pl-5 space-y-2 text-amber-900">
+                    <li>Usa la <strong>Mediana</strong> cuando quieras saber qué es lo "típico" o "normal" para una sola persona o evento, ignorando las exageraciones.</li>
+                    <li>Usa el <strong>Promedio</strong> cuando necesites planear para el <em>total</em> (como comprar comida para todos o calcular presupuestos completos), porque el promedio toma en cuenta hasta el último detalle.</li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="space-y-8" id="exercises-container">
+            
+            <!-- Ejercicio 1 -->
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-orange-500 text-white p-3 font-bold text-lg"><i class="fas fa-pizza-slice"></i> Caso 1: La Fiesta de Pizza (¡Atención aquí!)</div>
+                <div class="p-6">
+                    <p class="mb-4">Vas a organizar una fiesta. Preguntaste a 5 amigos cuántas rebanadas de pizza comen normalmente.</p>
+                    <div class="chart-container bg-slate-50 p-2 rounded-xl mb-4 border border-slate-200">
+                        <canvas id="chartEx1"></canvas>
+                    </div>
+                    <p class="mb-2"><strong>Mediana:</strong> 2 rebanadas (lo típico). <br><strong>Promedio:</strong> 4 rebanadas (inflado por Tomás, el jugador de fútbol que come 12 rebanadas).</p>
+                    <p class="font-medium mb-3">Si vas a hacer el pedido a la pizzería para asegurarte de que <strong>todos coman lo que quieren</strong> y nadie se quede con hambre, ¿qué número usas para calcular cuántas pizzas comprar en total?</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <label class="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 hover:bg-orange-50 rounded-lg border transition">
+                            <input type="radio" name="q1" value="mediana" class="mt-1 w-5 h-5 text-orange-600">
+                            <span>Compro calculando 2 rebanadas por persona (Mediana).</span>
+                        </label>
+                        <label class="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 hover:bg-orange-50 rounded-lg border transition">
+                            <input type="radio" name="q1" value="promedio" class="mt-1 w-5 h-5 text-orange-600">
+                            <span>Compro calculando 4 rebanadas por persona (Promedio).</span>
+                        </label>
+                    </div>
+                    
+                    <button onclick="checkRadio('q1', 'promedio', 'feedback1', '¡Brillante! Esta es la trampa clásica. Aunque la mediana es lo normal, si compras pensando en la mediana, ¡Tomás se quedará con hambre! El promedio incluye el estómago gigante de Tomás, por lo que garantiza que habrá comida para el TOTAL del grupo.')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition">Tomar Decisión</button>
+                    <div id="feedback1" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-indigo-500 text-white p-3 font-bold text-lg"><i class="fas fa-dog"></i> Caso 2: El Trabajo de Verano</div>
+                <div class="p-6">
+                    <p class="mb-4">Quieres pasear perros para ganar dinero. Revisas cuánto pagan los vecinos por paseo. Casi todos pagan $5 o $6, pero la dueña de una mansión paga $50 por su caniche de exhibición.</p>
+                    <div class="chart-container bg-slate-50 p-2 rounded-xl mb-4 border border-slate-200">
+                        <canvas id="chartEx2"></canvas>
+                    </div>
+                    <p class="font-medium mb-3">Tu mejor amiga te pregunta: <em>"Si pego carteles por el barrio y me contrata un vecino cualquiera, ¿cuánto dinero puedo esperar ganar por paseo?"</em></p>
+                    
+                    <select id="ans2" class="border-2 border-gray-300 rounded-xl p-3 w-full focus:border-indigo-500 focus:outline-none mb-4 text-base cursor-pointer">
+                        <option value="">Selecciona tu consejo...</option>
+                        <option value="promedio">"Espera ganar unos $14 (el promedio), es una zona de ricos."</option>
+                        <option value="mediana">"Espera ganar unos $5 (la mediana), la mansión es un caso de suerte raro."</option>
+                    </select>
+                    <br>
+                    <button onclick="checkSelect('ans2', 'mediana', 'feedback2', '¡Excelente consejo! La mediana prepara a tu amiga para la realidad. Si le dices el promedio ($14) y la contrata la Casa 1 ($5), se sentirá estafada.')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition">Aconsejar a tu amiga</button>
+                    <div id="feedback2" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-pink-500 text-white p-3 font-bold text-lg"><i class="fas fa-medal"></i> Caso 3: El Misterio de los Juegos Olímpicos</div>
+                <div class="p-6">
+                    <p class="mb-4">Estás viendo gimnasia olímpica. Una gimnasta hace un salto increíble. Hay 5 jueces y estas son las calificaciones que le dieron:</p>
+                    <div class="chart-container bg-slate-50 p-2 rounded-xl mb-4 border border-slate-200">
+                        <canvas id="chartEx3"></canvas>
+                    </div>
+                    <div class="bg-pink-50 p-3 rounded mb-4 text-sm">
+                        En los deportes olímpicos, los organizadores suelen <strong>eliminar la nota más alta y la nota más baja</strong> antes de calcular el promedio final del atleta.
+                    </div>
+                    <p class="font-medium mb-3">Mirando la gráfica (donde el Juez 5 parece tener algo en contra de ella), ¿por qué crees que los Juegos Olímpicos usan esta regla?</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <label class="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 hover:bg-pink-50 rounded-lg border transition">
+                            <input type="radio" name="q3" value="rapido" class="mt-1 w-5 h-5 text-pink-600">
+                            <span>Para que los jueces no tengan que sumar tantos números y terminen más rápido.</span>
+                        </label>
+                        <label class="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 hover:bg-pink-50 rounded-lg border transition">
+                            <input type="radio" name="q3" value="justo" class="mt-1 w-5 h-5 text-pink-600">
+                            <span>Para eliminar los datos extremos (como un juez muy malo o uno muy favorito) y que el promedio sea más justo y parecido a la mediana.</span>
+                        </label>
+                    </div>
+                    
+                    <button onclick="checkRadio('q3', 'justo', 'feedback3', '¡Distinto en el blanco! Al eliminar los extremos, evitan que un solo juez injusto (el de la nota 6.0) arruine el promedio de la atleta. ¡Es una forma de proteger la media!')" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg transition">Responder</button>
+                    <div id="feedback3" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-teal-600 text-white p-3 font-bold text-lg"><i class="fas fa-bus"></i> Caso 4: ¿A qué hora salgo?</div>
+                <div class="p-6">
+                    <p class="mb-4">La gráfica muestra cuántos minutos tardó el autobús escolar en llegar de tu casa a la escuela esta semana.</p>
+                    <div class="chart-container bg-slate-50 p-2 rounded-xl mb-4 border border-slate-200">
+                        <canvas id="chartEx4"></canvas>
+                    </div>
+                    <p class="mb-4">Casi todos los días tardó 15 minutos, pero el jueves hubo un accidente de tráfico y tardó 60 minutos.</p>
+                    <p class="font-medium mb-3">Si es domingo en la noche y debes poner tu alarma para mañana lunes, ¿qué tiempo de viaje usarías para calcular a qué hora despertarte?</p>
+                    
+                    <div class="flex items-center gap-3">
+                        <button onclick="checkDirectClick('feedback4', true, '¡Lógico! Usas la mediana. No vas a madrugar 1 hora extra todos los días solo por si acaso hay un accidente raro como el del jueves. Planificas para lo típico.')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg transition">15 minutos (Mediana)</button>
+                        <button onclick="checkDirectClick('feedback4', false, '¿De verdad te levantarías a las 5 AM todos los días solo porque un día hubo tráfico? ¡Piensa en tus horas de sueño! Planificamos para la situación normal.')" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded-lg transition">24 minutos (Promedio)</button>
+                    </div>
+                    <div id="feedback4" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-blue-500 text-white p-3 font-bold text-lg"><i class="fas fa-bicycle"></i> Caso 5: Vendiendo tu Bici Usada</div>
+                <div class="p-6">
+                    <p class="mb-4">Quieres vender tu bicicleta usada por internet. Buscas bicis similares a la tuya para saber qué precio poner. Encuentras estos precios:</p>
+                    <div class="flex flex-wrap gap-4 justify-center mb-6">
+                        <div class="bg-blue-50 px-4 py-3 rounded-xl border border-blue-200 shadow text-center"><i class="fas fa-tag text-blue-400 mb-1"></i><br><span class="font-bold text-lg">$40</span></div>
+                        <div class="bg-blue-50 px-4 py-3 rounded-xl border border-blue-200 shadow text-center"><i class="fas fa-tag text-blue-400 mb-1"></i><br><span class="font-bold text-lg">$45</span></div>
+                        <div class="bg-blue-50 px-4 py-3 rounded-xl border border-blue-200 shadow text-center"><i class="fas fa-tag text-blue-400 mb-1"></i><br><span class="font-bold text-lg">$50</span></div>
+                        <div class="bg-blue-50 px-4 py-3 rounded-xl border border-blue-200 shadow text-center"><i class="fas fa-tag text-blue-400 mb-1"></i><br><span class="font-bold text-lg">$45</span></div>
+                        <div class="bg-blue-50 px-4 py-3 rounded-xl border border-blue-200 shadow text-center"><i class="fas fa-star text-yellow-400 mb-1"></i><br><span class="font-bold text-lg text-blue-800">$900</span><br><span class="text-xs">(Bici de colección)</span></div>
+                    </div>
+                    
+                    <p class="font-medium mb-3">Si sacas el promedio matemático, da <strong>$216</strong>. ¿Deberías publicar tu bici normal en $216?</p>
+                    
+                    <select id="ans5" class="border-2 border-gray-300 rounded-xl p-3 w-full focus:border-blue-500 focus:outline-none mb-4 text-base cursor-pointer">
+                        <option value="">Selecciona tu estrategia de venta...</option>
+                        <option value="si">Sí, el promedio es exacto, la pondré en $216 y me haré rica.</option>
+                        <option value="no">No, la pondría a unos $45 (Mediana). Si la pongo a $216 nadie la comprará porque las normales cuestan 40-50.</option>
+                    </select>
+                    <br>
+                    <button onclick="checkSelect('ans5', 'no', 'feedback5', '¡Tienes madera para los negocios! Entendiste que el $900 arruinó el promedio. Si quieres vender rápido, debes fijarte en la mediana del mercado.')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">Publicar Precio</button>
+                    <div id="feedback5" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-rose-500 text-white p-3 font-bold text-lg"><i class="fas fa-tshirt"></i> Caso 6: Inventario de la Boutique</div>
+                <div class="p-6">
+                    <p class="mb-4">Imagina que eres gerente de una tienda de ropa juvenil. Anotaste las edades de las últimas 5 clientas que compraron vestidos:</p>
+                    <div class="text-center mb-4">
+                        <span class="text-2xl font-bold tracking-widest bg-rose-50 px-4 py-2 rounded-lg border border-rose-200">12, 13, 13, 14, 88</span>
+                        <p class="text-sm text-gray-500 mt-2">(La de 88 era una abuelita comprando un regalo)</p>
+                    </div>
+                    
+                    <p class="font-medium mb-3">Tienes que hacer un pedido de vestidos nuevos a la fábrica. ¿Para qué rango de edad pedirías la ropa?</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <label class="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 hover:bg-rose-50 rounded-lg border transition">
+                            <input type="radio" name="q6" value="promedio" class="mt-1 w-5 h-5 text-rose-600">
+                            <span>Para los <strong>28 años</strong> (Ese es el promedio matemático por la culpa de la abuelita).</span>
+                        </label>
+                        <label class="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 hover:bg-rose-50 rounded-lg border transition">
+                            <input type="radio" name="q6" value="mediana" class="mt-1 w-5 h-5 text-rose-600">
+                            <span>Para los <strong>13 años</strong> (La mediana, la clientela típica).</span>
+                        </label>
+                    </div>
+                    
+                    <button onclick="checkRadio('q6', 'mediana', 'feedback6', '¡Salvaste la tienda! Si pides vestidos para chicas de 28 años, tus clientas de 13 no comprarán nada. En ventas y demografía, la mediana es reina.')" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-4 rounded-lg transition">Hacer Pedido</button>
+                    <div id="feedback6" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-emerald-500 text-white p-3 font-bold text-lg"><i class="fas fa-video"></i> Caso 7: Patrocinio de YouTube</div>
+                <div class="p-6">
+                    <p class="mb-4">Tienes un canal de YouTube. Observa la gráfica de las reproducciones de tus últimos videos.</p>
+                    <div class="chart-container bg-slate-50 p-2 rounded-xl mb-4 border border-slate-200">
+                        <canvas id="chartEx7"></canvas>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 mb-4">
+                        <div class="bg-emerald-50 p-4 rounded-xl flex-1 border border-emerald-200">
+                            <h4 class="font-bold text-emerald-800">Marca A te dice:</h4>
+                            <p class="text-sm">"Te pagaremos basándonos en tu <strong>promedio</strong> de vistas totales".</p>
+                        </div>
+                        <div class="bg-emerald-50 p-4 rounded-xl flex-1 border border-emerald-200">
+                            <h4 class="font-bold text-emerald-800">Marca B te dice:</h4>
+                            <p class="text-sm">"Te pagaremos basándonos en la <strong>mediana</strong> de tus vistas diarias".</p>
+                        </div>
+                    </div>
+                    
+                    <p class="font-medium mb-3">Sabiendo que tuviste un solo video que se hizo mega-viral (dato extremo hacia arriba), ¿qué contrato te conviene firmar para ganar MÁS dinero?</p>
+                    
+                    <select id="ans7" class="border-2 border-gray-300 rounded-xl p-3 w-full focus:border-emerald-500 focus:outline-none mb-4 text-base cursor-pointer">
+                        <option value="">Selecciona la mejor oferta...</option>
+                        <option value="promedio">El contrato de la Marca A (Promedio), porque el video viral subirá mucho el número.</option>
+                        <option value="mediana">El contrato de la Marca B (Mediana), porque ignorará el video viral.</option>
+                    </select>
+                    <br>
+                    <button onclick="checkSelect('ans7', 'promedio', 'feedback7', '¡Aprobado! A veces, como vendedor, ¡los datos extremos te benefician! El promedio está inflado hacia arriba, así que usarlo en esta negociación te hará ganar más dinero. ¡Qué astuta!')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg transition">Firmar Contrato</button>
+                    <div id="feedback7" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-purple-600 text-white p-3 font-bold text-lg"><i class="fas fa-running"></i> Caso 8: El Plan de Entrenamiento</div>
+                <div class="p-6">
+                    <p class="mb-4">Te estás preparando para una carrera. Corres 2km de lunes a viernes, descansas (0km) el sábado, y el domingo haces una carrera larga de 10km.</p>
+                    <div class="chart-container bg-slate-50 p-2 rounded-xl mb-4 border border-slate-200">
+                        <canvas id="chartEx8"></canvas>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block font-medium mb-2">1. Según la gráfica, ¿cuál es tu rutina típica la mayoría de los días (Mediana)?</label>
+                        <div class="flex items-center gap-3 mb-4">
+                            <input type="number" id="ans8_val" class="border-2 border-gray-300 rounded-lg p-2 w-32 focus:border-purple-500 focus:outline-none" placeholder="Km">
+                            <span class="text-gray-500">kilómetros</span>
+                        </div>
+                        
+                        <label class="block font-medium mb-2">2. Si quieres saber cuántos kilómetros correrás en TOTAL en un mes (30 días), ¿multiplicas por la mediana o por el promedio diario?</label>
+                        <select id="ans8_select" class="border-2 border-gray-300 rounded-lg p-2 w-full focus:border-purple-500 focus:outline-none">
+                            <option value="">Selecciona para proyectar al futuro...</option>
+                            <option value="promedio">Por el Promedio. Porque para totales, necesito contar la carrera larga del domingo.</option>
+                            <option value="mediana">Por la Mediana. Porque la del domingo es un dato extremo.</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="checkEx8()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition">Calcular Entrenamiento</button>
+                    <div id="feedback8" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-fuchsia-600 text-white p-3 font-bold text-lg"><i class="fas fa-heartbeat"></i> Caso 9: El Experimento Científico</div>
+                <div class="p-6">
+                    <p class="mb-4">En la clase de biología estás midiendo cuánto crece una planta mágica por día. Día 1: 2cm, Día 2: 3cm, Día 3: 2cm, Día 4: 100cm (alguien le echó bebida energética). </p>
+                    
+                    <p class="font-medium mb-3">Tienes que escribir el informe final de la escuela sobre la planta. Quieres ser una científica honesta.</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <label class="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 hover:bg-fuchsia-50 rounded-lg border transition">
+                            <input type="radio" name="q9" value="descartar" class="mt-1 w-5 h-5 text-fuchsia-600">
+                            <span>Menciono el promedio (26.7cm diarios) en el título grande, porque suena genial.</span>
+                        </label>
+                        <label class="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 hover:bg-fuchsia-50 rounded-lg border transition">
+                            <input type="radio" name="q9" value="honesto" class="mt-1 w-5 h-5 text-fuchsia-600">
+                            <span>Informo que la mediana de crecimiento es unos 2cm diarios, y pongo una nota aclarando que el Día 4 hubo una anomalía por la bebida energética.</span>
+                        </label>
+                    </div>
+                    
+                    <button onclick="checkRadio('q9', 'honesto', 'feedback9', '¡Ciencia de verdad! Los buenos científicos no ocultan los datos extremos, pero tampoco dejan que arruinen sus conclusiones. Usan la mediana para lo normal y documentan las anomalías.')" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded-lg transition">Publicar Informe</button>
+                    <div id="feedback9" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 border-b-8 border-b-violet-800">
+                <div class="bg-slate-800 text-white p-4 font-bold text-lg flex items-center justify-between">
+                    <span><i class="fas fa-gavel text-amber-400 text-xl mr-2"></i> Caso 10: La Alcaldesa Estudiantil (Nivel Jefe)</span>
+                </div>
+                <div class="p-6">
+                    <p class="mb-4">Eres la presidenta estudiantil. Tienes que convencer al director de que los clubes necesitan más dinero. Hay 5 clubes en la escuela y esto es lo que tienen en sus cuentas:</p>
+                    <div class="chart-container bg-slate-50 p-2 rounded-xl mb-4 border border-slate-200">
+                        <canvas id="chartEx10"></canvas>
+                    </div>
+                    
+                    <div class="bg-violet-50 p-4 rounded-xl mb-4 border border-violet-200">
+                        <p class="mb-2"><strong>El director argumenta:</strong> "¡No daré más presupuesto! El promedio matemático de dinero de los clubes es <strong>$200</strong> dólares ($1000 total / 5). ¡Están nadando en dinero!"</p>
+                    </div>
+
+                    <p class="mb-4 font-medium">Como experta en datos, ¿cuál es tu argumento de defensa para los 4 clubes pobres?</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <label class="flex items-start gap-3 cursor-pointer p-3 border rounded-lg hover:bg-slate-50 transition">
+                            <input type="radio" name="q10" value="mal" class="mt-1 w-5 h-5 text-slate-800">
+                            <span>"Señor director, usted sumó mal. El promedio en realidad es menos." (Falso, el cálculo del director es correcto).</span>
+                        </label>
+                        <label class="flex items-start gap-3 cursor-pointer p-3 border rounded-lg hover:bg-slate-50 transition">
+                            <input type="radio" name="q10" value="trampa" class="mt-1 w-5 h-5 text-slate-800">
+                            <span>"Señor director, el promedio es engañoso por culpa del dato extremo del Club de Robótica. La <strong>mediana</strong> es $10. ¡Cuatro de cinco clubes están en bancarrota!"</span>
+                        </label>
+                    </div>
+                    
+                    <button onclick="checkRadio('q10', 'trampa', 'feedback10', '¡LO HAS LOGRADO! 🎓 Acabas de usar la estadística para defender lo que es justo frente a alguien que usaba mal los números. Las matemáticas te han dado una voz poderosa. ¡Felicidades, Agente de Decisiones!')" class="bg-slate-800 hover:bg-slate-900 text-amber-400 font-bold py-3 px-6 rounded-lg w-full transition text-lg shadow-lg">Enfrentar al Director</button>
+                    <div id="feedback10" class="feedback mt-4 p-4 rounded-lg border text-lg text-center font-bold"></div>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- Pie de página -->
+        <footer class="mt-12 text-center text-gray-500 text-sm pb-8">
+            <p>Conocimiento desbloqueado: Saber cuándo usar la Media o la Mediana es un superpoder para la vida real. 🦸‍♀️📊</p>
+        </footer>
+    </div>
+
+    <script>
+        // Funciones de validación
+        function showFeedback(elementId, isCorrect, message) {
+            const el = document.getElementById(elementId);
+            el.style.display = 'block';
+            if (isCorrect) {
+                el.className = 'feedback mt-4 p-4 rounded-lg border correct text-base shadow-sm';
+                el.innerHTML = `<i class="fas fa-star text-amber-500 mr-2 text-xl"></i> <strong>¡Correcto!</strong> ${message}`;
+            } else {
+                el.className = 'feedback mt-4 p-4 rounded-lg border incorrect text-base shadow-sm';
+                el.innerHTML = `<i class="fas fa-tools text-rose-500 mr-2 text-xl"></i> Piénsalo desde otro ángulo. Recuerda el consejo de los expertos al inicio de la página.`;
+            }
+        }
+
+        function checkSelect(inputId, correctValue, feedbackId, successMsg) {
+            const val = document.getElementById(inputId).value;
+            if (!val) {
+                showFeedback(feedbackId, false, "Selecciona una opción");
+                return;
+            }
+            showFeedback(feedbackId, val === correctValue, successMsg);
+        }
+
+        function checkRadio(radioName, correctValue, feedbackId, successMsg) {
+            const radios = document.getElementsByName(radioName);
+            let selected = null;
+            for (let r of radios) {
+                if (r.checked) { selected = r.value; break; }
+            }
+            if (!selected) {
+                showFeedback(feedbackId, false, "");
+                document.getElementById(feedbackId).innerHTML = `<i class="fas fa-exclamation-triangle mr-2 text-amber-600"></i> Debes elegir una opción primero.`;
+                return;
+            }
+            showFeedback(feedbackId, selected === correctValue, successMsg);
+        }
+
+        function checkDirectClick(feedbackId, isCorrect, msg) {
+            showFeedback(feedbackId, isCorrect, msg);
+        }
+
+        function checkEx8() {
+            const val = parseFloat(document.getElementById('ans8_val').value);
+            const select = document.getElementById('ans8_select').value;
+            
+            if (isNaN(val) || select === "") {
+                showFeedback('feedback8', false, "");
+                document.getElementById('feedback8').innerHTML = "Responde ambas preguntas para continuar.";
+                return;
+            }
+            
+            if (val === 2 && select === "promedio") {
+                showFeedback('feedback8', true, "¡Maestra planificadora! La mediana (2) es lo que corres normalmente. Pero si quieres saber los km TOTALES al mes, DEBES incluir tu esfuerzo dominical, por eso para proyectar al futuro usas el promedio.");
+            } else if (val === 2) {
+                showFeedback('feedback8', false, "La mediana es correcta (2km). Pero piénsalo, si usas la mediana para calcular el total del mes, ¡estarás borrando las carreras de 10km que sí hiciste! Para sumar totales, el promedio es tu amigo.");
+            } else {
+                showFeedback('feedback8', false, "Mira la gráfica. ¿En qué número se repiten casi todos los días de la semana?");
+            }
+        }
+
+        window.onload = function() {
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#4b5563'; // gray-600
+            
+            // Ex 1: Pizza
+            new Chart(document.getElementById('chartEx1'), {
+                type: 'bar',
+                data: {
+                    labels: ['Amiga 1', 'Amigo 2', 'Tú', 'Amiga 3', 'Tomás'],
+                    datasets: [{
+                        label: 'Rebanadas',
+                        data: [2, 2, 2, 2, 12],
+                        backgroundColor: ['#fdba74','#fdba74','#fdba74','#fdba74','#ea580c'],
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            // Ex 2: Perros
+            new Chart(document.getElementById('chartEx2'), {
+                type: 'bar',
+                indexAxis: 'y', // Horizontal
+                data: {
+                    labels: ['Casa 1', 'Casa 2', 'Casa 3', 'Casa 4', 'La Mansión'],
+                    datasets: [{
+                        label: 'Pago ($)',
+                        data: [5, 6, 5, 4, 50],
+                        backgroundColor: '#8b5cf6',
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            // Ex 3: Jueces Gimnasia
+            new Chart(document.getElementById('chartEx3'), {
+                type: 'bar',
+                data: {
+                    labels: ['Juez 1', 'Juez 2', 'Juez 3', 'Juez 4', 'Juez 5'],
+                    datasets: [{
+                        label: 'Calificación',
+                        data: [9.5, 9.6, 9.4, 9.5, 6.0],
+                        backgroundColor: ['#f472b6','#f472b6','#f472b6','#f472b6','#be185d'],
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { max: 10, min: 0 } }, plugins: { legend: { display: false } } }
+            });
+
+            // Ex 4: Autobus
+            new Chart(document.getElementById('chartEx4'), {
+                type: 'line',
+                data: {
+                    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves (Choque)', 'Viernes'],
+                    datasets: [{
+                        label: 'Minutos de viaje',
+                        data: [15, 14, 16, 60, 15],
+                        borderColor: '#0d9488',
+                        pointBackgroundColor: '#0d9488',
+                        pointRadius: 6,
+                        tension: 0.1
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            // Ex 7: Youtube
+            new Chart(document.getElementById('chartEx7'), {
+                type: 'bar',
+                data: {
+                    labels: ['Vid 1', 'Vid 2', 'Vid 3', 'Vid 4 (Viral!)', 'Vid 5'],
+                    datasets: [{
+                        label: 'Vistas',
+                        data: [1000, 1100, 950, 50000, 1050],
+                        backgroundColor: '#10b981',
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            // Ex 8: Entrenamiento
+            new Chart(document.getElementById('chartEx8'), {
+                type: 'bar',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom (Carrera)'],
+                    datasets: [{
+                        label: 'Kilómetros',
+                        data: [2, 2, 2, 2, 2, 0, 10],
+                        backgroundColor: ['#a855f7','#a855f7','#a855f7','#a855f7','#a855f7','#e9d5ff','#7e22ce'],
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            // Ex 10: Boss Alcaldesa
+            new Chart(document.getElementById('chartEx10'), {
+                type: 'bar',
+                data: {
+                    labels: ['Ajedrez', 'Arte', 'Lectura', 'Jardinería', 'Robótica'],
+                    datasets: [{
+                        label: 'Fondos en el banco ($)',
+                        data: [10, 10, 10, 10, 960],
+                        backgroundColor: ['#94a3b8','#94a3b8','#94a3b8','#94a3b8','#1e293b'],
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        };
+    </script>
+</body>
+</html>

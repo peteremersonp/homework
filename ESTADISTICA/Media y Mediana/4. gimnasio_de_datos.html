@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimnasio de Datos: Entrenamiento de Cálculo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #fffbeb; /* Fondo amarillo muy claro/cálido */
+            background-image: radial-gradient(#fde68a 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .exercise-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .exercise-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .feedback {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .correct { color: #b45309; background-color: #fef3c7; border-color: #fde68a; }
+        .incorrect { color: #9f1239; background-color: #ffe4e6; border-color: #fecdd3; }
+        
+        /* Estilos para las cajas de datos */
+        .data-box {
+            display: inline-block;
+            background-color: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #374151;
+            margin: 0.25rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="bg-white rounded-3xl p-8 shadow-lg mb-8 border-t-8 border-amber-500 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600 mb-4">
+                🏋️‍♀️ Gimnasio de Datos
+            </h1>
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">Entrenamiento de Cálculo</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                ¡Bienvenida a la zona de pesas matemáticas! Aquí vamos a entrenar el <strong>algoritmo</strong> (los pasos exactos) para calcular la Media y la Mediana. Ponte tu ropa deportiva, saca una hoja de papel si la necesitas, ¡y a calcular!
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                <div class="bg-amber-50 p-5 rounded-2xl border border-amber-200 shadow-inner">
+                    <h3 class="font-bold text-amber-800 text-xl mb-3"><i class="fas fa-dumbbell"></i> Pasos para el PROMEDIO</h3>
+                    <ol class="list-decimal pl-5 space-y-2 text-amber-900 font-medium">
+                        <li><strong>Suma</strong> todos los números de la lista.</li>
+                        <li><strong>Cuenta</strong> cuántos números hay en total.</li>
+                        <li><strong>Divide</strong> el resultado de la suma entre la cantidad de números.</li>
+                    </ol>
+                </div>
+                <div class="bg-orange-50 p-5 rounded-2xl border border-orange-200 shadow-inner">
+                    <h3 class="font-bold text-orange-800 text-xl mb-3"><i class="fas fa-sort-numeric-down"></i> Pasos para la MEDIANA</h3>
+                    <ol class="list-decimal pl-5 space-y-2 text-orange-900 font-medium">
+                        <li><strong>¡ORDENA!</strong> Escribe los números de menor a mayor (¡No te saltes este paso!).</li>
+                        <li><strong>Busca el centro.</strong> Si sobra uno en medio, ¡esa es!</li>
+                        <li>Si quedan <strong>dos</strong> en el centro, súmalos y divídelos entre 2 (sácale el promedio a los dos del medio).</li>
+                    </ol>
+                </div>
+            </div>
+        </header>
+
+        <div class="space-y-8" id="exercises-container">
+            
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-blue-500 text-white p-3 font-bold text-lg"><i class="fas fa-ticket-alt"></i> Calentamiento 1: Entradas de Cine (Promedio)</div>
+                <div class="p-6">
+                    <p class="mb-4">Tú y 3 amigas compraron entradas para el cine. Como cada una compró en un lugar diferente o con descuentos distintos, estos fueron los precios que pagaron:</p>
+                    <div class="text-center mb-6">
+                        <span class="data-box">$12</span>
+                        <span class="data-box">$10</span>
+                        <span class="data-box">$15</span>
+                        <span class="data-box">$11</span>
+                    </div>
+                    <p class="font-medium mb-3">Calcula el <strong>Promedio</strong> siguiendo los pasos. ¿Cuánto pagó cada una en promedio?</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="bg-gray-50 p-3 rounded-lg border">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Paso 1: Suma total</label>
+                            <input type="number" id="ex1_sum" class="w-full p-2 border rounded focus:border-blue-500 focus:outline-none" placeholder="Total">
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg border">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Paso 2: ¿Entre cuánto divides?</label>
+                            <input type="number" id="ex1_n" class="w-full p-2 border rounded focus:border-blue-500 focus:outline-none" placeholder="Cantidad">
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                            <label class="block text-sm font-bold text-blue-800 mb-1">Paso 3: Promedio Final</label>
+                            <input type="number" id="ex1_ans" class="w-full p-2 border rounded focus:border-blue-500 focus:outline-none font-bold" placeholder="$">
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkEx1()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">Revisar Calentamiento</button>
+                    <div id="feedback1" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-emerald-500 text-white p-3 font-bold text-lg"><i class="fab fa-tiktok"></i> Calentamiento 2: Tiempo en Pantalla (Mediana)</div>
+                <div class="p-6">
+                    <p class="mb-4">El celular te muestra cuántos minutos usaste TikTok en los últimos 5 días. Los datos están <strong>desordenados</strong>:</p>
+                    <div class="text-center mb-6">
+                        <span class="data-box">45</span>
+                        <span class="data-box">120</span>
+                        <span class="data-box">30</span>
+                        <span class="data-box">60</span>
+                        <span class="data-box">90</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Paso 1: Escribe los números ordenados de MENOR a MAYOR (separados por comas):</label>
+                        <input type="text" id="ex2_sort" class="w-full p-2 border-2 border-emerald-200 rounded focus:border-emerald-500 focus:outline-none mb-4" placeholder="Ej: 10, 20, 30...">
+                        
+                        <label class="block text-sm font-bold text-emerald-800 mb-2">Paso 2: ¿Cuál es el número que quedó exactamente en el centro (la Mediana)?</label>
+                        <input type="number" id="ex2_ans" class="w-32 p-2 border-2 border-gray-300 rounded focus:border-emerald-500 focus:outline-none font-bold"> minutos
+                    </div>
+                    
+                    <button onclick="checkEx2()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-6 rounded-lg transition">Revisar Mediana</button>
+                    <div id="feedback2" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-purple-500 text-white p-3 font-bold text-lg"><i class="fas fa-book-open"></i> Rutina 3: Lectura (Promedio con Decimales)</div>
+                <div class="p-6">
+                    <p class="mb-4">Te propusiste leer un libro. Esta es la cantidad de páginas que leíste de lunes a viernes:</p>
+                    <div class="text-center mb-6">
+                        <span class="data-box">20</span>
+                        <span class="data-box">25</span>
+                        <span class="data-box">15</span>
+                        <span class="data-box">30</span>
+                        <span class="data-box">12</span>
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded mb-4 text-sm text-purple-800">
+                        <strong>Nota:</strong> A veces, el promedio no da un número entero exacto, ¡y eso está perfecto! Puede dar decimales.
+                    </div>
+                    
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="flex-1 max-w-xs">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Tu Promedio Diario de páginas:</label>
+                            <input type="number" step="0.1" id="ex3_ans" class="w-full p-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none font-bold text-lg">
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkSimple('ex3_ans', 20.4, 'feedback3', '¡Cálculo exacto! (La suma es 102, dividido 5 da 20.4). ¡No le temas a los decimales!')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition">Verificar Decimales</button>
+                    <div id="feedback3" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-rose-500 text-white p-3 font-bold text-lg"><i class="fas fa-shoe-prints"></i> Rutina 4: Talla de Zapatos (Mediana de grupo par)</div>
+                <div class="p-6">
+                    <p class="mb-4">Anotaste la talla de zapatos de tus <strong>6</strong> mejores amigos. ¡Ojo, son 6 números!</p>
+                    <div class="text-center mb-6">
+                        <span class="data-box">36</span>
+                        <span class="data-box">38</span>
+                        <span class="data-box">35</span>
+                        <span class="data-box">39</span>
+                        <span class="data-box">37</span>
+                        <span class="data-box">40</span>
+                    </div>
+                    <div class="bg-rose-50 border-l-4 border-rose-500 p-3 mb-4 rounded text-sm">
+                        <strong>Instrucción Especial:</strong> Ordena los 6 números. Como no hay un solo número central, toma los DOS números del medio y saca el promedio entre ellos.
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-gray-50 p-3 rounded-lg border">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">¿Cuáles son los DOS números del centro (después de ordenar)?</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="ex4_m1" class="w-1/2 p-2 border rounded" placeholder="Centro 1">
+                                <input type="number" id="ex4_m2" class="w-1/2 p-2 border rounded" placeholder="Centro 2">
+                            </div>
+                        </div>
+                        <div class="bg-rose-50 p-3 rounded-lg border border-rose-200">
+                            <label class="block text-sm font-bold text-rose-800 mb-1">La Mediana final (El promedio de esos dos)</label>
+                            <input type="number" step="0.1" id="ex4_ans" class="w-full p-2 border-2 border-rose-300 rounded font-bold" placeholder="Mediana">
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkEx4()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-6 rounded-lg transition">Levantar Pesas (Revisar)</button>
+                    <div id="feedback4" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-teal-600 text-white p-3 font-bold text-lg"><i class="fas fa-futbol"></i> Rutina 5: Los goles (El Cero importa)</div>
+                <div class="p-6">
+                    <p class="mb-4">Tu equipo jugó 5 partidos. Estos son los goles que anotaron en cada partido:</p>
+                    <div class="text-center mb-6">
+                        <span class="data-box bg-teal-100 text-teal-800 border-teal-300">2</span>
+                        <span class="data-box bg-teal-100 text-teal-800 border-teal-300">0</span>
+                        <span class="data-box bg-teal-100 text-teal-800 border-teal-300">0</span>
+                        <span class="data-box bg-teal-100 text-teal-800 border-teal-300">1</span>
+                        <span class="data-box bg-teal-100 text-teal-800 border-teal-300">2</span>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded mb-4 text-sm border border-yellow-200">
+                        <strong>¡Trampa Matemática!</strong> Cuando sacas un promedio, los "ceros" no suman nada, pero <strong>SÍ CUENTAN</strong> como eventos (partidos jugados). ¡No los ignores al dividir!
+                    </div>
+                    
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="flex-1 max-w-xs">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Promedio de goles por partido:</label>
+                            <input type="number" id="ex5_ans" class="w-full p-3 border-2 border-teal-300 rounded-lg focus:border-teal-500 focus:outline-none font-bold text-lg">
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkSimple('ex5_ans', 1, 'feedback5', '¡Correcto! Suma: 5 goles. Dividido entre 5 partidos jugados = 1 gol promedio. ¡Nunca ignores los ceros al dividir!')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg transition">Disparar al arco</button>
+                    <div id="feedback5" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-indigo-500 text-white p-3 font-bold text-lg"><i class="fas fa-graduation-cap"></i> Rutina 6: Las Calificaciones (Ordenando rápido)</div>
+                <div class="p-6">
+                    <p class="mb-4">Aquí están tus calificaciones finales de las 7 materias que cursaste. Encuentra la <strong>Mediana</strong>.</p>
+                    <div class="flex flex-wrap justify-center mb-6">
+                        <span class="data-box">85</span>
+                        <span class="data-box">92</span>
+                        <span class="data-box">78</span>
+                        <span class="data-box">100</span>
+                        <span class="data-box">88</span>
+                        <span class="data-box">95</span>
+                        <span class="data-box">80</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 mb-2">Tip: Puedes buscar el más pequeño, luego el que le sigue... hasta que encuentres el cuarto número, que será el del centro.</p>
+                    
+                    <div class="flex items-center gap-4 mb-4">
+                        <label class="font-bold text-indigo-800">La Mediana es:</label>
+                        <input type="number" id="ex6_ans" class="w-32 p-3 border-2 border-indigo-300 rounded-lg focus:border-indigo-500 focus:outline-none font-bold text-lg">
+                    </div>
+                    
+                    <button onclick="checkSimple('ex6_ans', 88, 'feedback6', '¡Genial! El orden correcto era: 78, 80, 85, <strong>88</strong>, 92, 95, 100. ¡El 88 está justo en el medio!')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg transition">Aprobar Examen</button>
+                    <div id="feedback6" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-fuchsia-600 text-white p-3 font-bold text-lg"><i class="fas fa-coins"></i> Rutina 7: Semana de Ahorros (Calcula ambas)</div>
+                <div class="p-6">
+                    <p class="mb-4">Esto es lo que ahorraste cada día de lunes a viernes:</p>
+                    <div class="text-center mb-6">
+                        <span class="data-box">$2</span>
+                        <span class="data-box">$3</span>
+                        <span class="data-box">$2</span>
+                        <span class="data-box">$4</span>
+                        <span class="data-box bg-yellow-200 border-yellow-400">$39</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">(El viernes tu tío te dio dinero extra).</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        <div class="bg-gray-50 p-4 rounded-xl border-2 border-gray-200">
+                            <label class="block font-bold mb-2 text-fuchsia-800">1. Calcula el Promedio:</label>
+                            <input type="number" id="ex7_prom" class="w-full p-2 border rounded focus:border-fuchsia-500" placeholder="Suma y divide entre 5">
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-xl border-2 border-gray-200">
+                            <label class="block font-bold mb-2 text-fuchsia-800">2. Calcula la Mediana:</label>
+                            <input type="number" id="ex7_med" class="w-full p-2 border rounded focus:border-fuchsia-500" placeholder="Ordena y busca el centro">
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkEx7()" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold py-2 px-6 rounded-lg transition">Verificar Ambas</button>
+                    <div id="feedback7" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-cyan-600 text-white p-3 font-bold text-lg"><i class="fas fa-ruler"></i> Rutina 8: Las Pulseras (Mediana con medidas)</div>
+                <div class="p-6">
+                    <p class="mb-4">Estás haciendo pulseras. Mediste el largo de las últimas 4 pulseras en centímetros:</p>
+                    <div class="text-center mb-6">
+                        <span class="data-box">150 cm</span>
+                        <span class="data-box">160 cm</span>
+                        <span class="data-box">155 cm</span>
+                        <span class="data-box">165 cm</span>
+                    </div>
+                    <p class="font-medium mb-3">Encuentra la <strong>Mediana</strong> (recuerda: son 4 datos, así que tendrás que promediar los dos del centro).</p>
+                    
+                    <div class="flex items-center gap-4 mb-4">
+                        <label class="font-bold text-cyan-800">Mediana:</label>
+                        <input type="number" step="0.1" id="ex8_ans" class="w-32 p-3 border-2 border-cyan-300 rounded-lg focus:border-cyan-500 focus:outline-none font-bold text-lg">
+                        <span class="text-gray-600 font-medium">cm</span>
+                    </div>
+                    
+                    <button onclick="checkSimple('ex8_ans', 157.5, 'feedback8', '¡Impecable! Ordenados: 150, 155, 160, 165. El centro es (155 + 160) / 2 = 157.5.')" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-6 rounded-lg transition">Medir</button>
+                    <div id="feedback8" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-pink-500 text-white p-3 font-bold text-lg"><i class="fas fa-shopping-bag"></i> Rutina 9: Día de Compras</div>
+                <div class="p-6">
+                    <p class="mb-4">Fuiste de compras y estos son los precios de los 4 artículos que llevas en el carrito:</p>
+                    <div class="text-center mb-6">
+                        <span class="data-box">$15</span>
+                        <span class="data-box">$25</span>
+                        <span class="data-box">$10</span>
+                        <span class="data-box">$30</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 mb-4">
+                        <label class="font-bold text-pink-800">¿Cuál es el costo Promedio de cada artículo?</label>
+                        <span class="font-bold text-xl text-gray-400">$</span>
+                        <input type="number" id="ex9_ans" class="w-32 p-3 border-2 border-pink-300 rounded-lg focus:border-pink-500 font-bold text-lg">
+                    </div>
+                    
+                    <button onclick="checkSimple('ex9_ans', 20, 'feedback9', '¡Matemáticas de compras superadas! Suma = 80, entre 4 = 20.')" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded-lg transition">Pagar en Caja</button>
+                    <div id="feedback9" class="feedback mt-4 p-4 rounded-lg border text-base font-medium"></div>
+                </div>
+            </div>
+
+            <div class="exercise-card bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 border-b-8 border-b-amber-600">
+                <div class="bg-slate-800 text-white p-3 font-bold text-lg flex items-center justify-between">
+                    <span><i class="fas fa-crown text-yellow-400"></i> Ejercicio 10: La Prueba Final del Gym</span>
+                </div>
+                <div class="p-6">
+                    <p class="mb-4">Llegaste al jefe final. Vamos a medir la temperatura en grados de tu ciudad durante los últimos 7 días. Calcula AMBAS medidas con cuidado.</p>
+                    <div class="flex flex-wrap justify-center gap-2 mb-6 p-4 bg-slate-100 rounded-xl border border-slate-300 shadow-inner">
+                        <span class="data-box border-slate-400 text-slate-700">22</span>
+                        <span class="data-box border-slate-400 text-slate-700">24</span>
+                        <span class="data-box border-slate-400 text-slate-700">21</span>
+                        <span class="data-box border-slate-400 text-slate-700">22</span>
+                        <span class="data-box border-slate-400 text-slate-700">28</span>
+                        <span class="data-box border-slate-400 text-slate-700">25</span>
+                        <span class="data-box border-slate-400 text-slate-700">26</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-amber-50 p-5 rounded-xl border-2 border-amber-200">
+                            <h4 class="font-bold text-amber-800 mb-3 text-center border-b pb-2">Misión: PROMEDIO</h4>
+                            <div class="space-y-3">
+                                <label class="flex justify-between items-center text-sm font-bold">1. Suma todo: <input type="number" id="ex10_p1" class="w-20 p-2 border rounded"></label>
+                                <label class="flex justify-between items-center text-sm font-bold text-amber-700">2. Resultado final: <input type="number" id="ex10_p2" class="w-20 p-2 border-2 border-amber-400 rounded font-bold"></label>
+                            </div>
+                        </div>
+                        <div class="bg-orange-50 p-5 rounded-xl border-2 border-orange-200">
+                            <h4 class="font-bold text-orange-800 mb-3 text-center border-b pb-2">Misión: MEDIANA</h4>
+                            <div class="space-y-3">
+                                <label class="block text-sm font-bold mb-1">1. Escríbelos ordenados:</label>
+                                <input type="text" id="ex10_m1" class="w-full p-2 border rounded mb-2 text-sm" placeholder="21, 22...">
+                                <label class="flex justify-between items-center text-sm font-bold text-orange-700">2. Número central: <input type="number" id="ex10_m2" class="w-20 p-2 border-2 border-orange-400 rounded font-bold"></label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkBoss()" class="bg-slate-800 hover:bg-slate-900 text-amber-400 font-bold py-4 px-6 rounded-lg w-full transition text-lg shadow-lg">Demostrar mi Fuerza Matemática</button>
+                    <div id="feedback10" class="feedback mt-4 p-4 rounded-lg border text-lg text-center font-bold"></div>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- Pie de página -->
+        <footer class="mt-12 text-center text-gray-500 text-sm pb-8">
+            <p>¡Gimnasio de Datos completado! Ya eres una atleta de las estadísticas. 🥇📊</p>
+        </footer>
+    </div>
+
+    <script>
+        // Función principal de feedback
+        function showFeedback(elementId, isCorrect, message) {
+            const el = document.getElementById(elementId);
+            el.style.display = 'block';
+            if (isCorrect) {
+                el.className = 'feedback mt-4 p-4 rounded-lg border correct shadow-sm';
+                el.innerHTML = `<i class="fas fa-check-circle mr-2 text-xl text-amber-600"></i> ${message}`;
+            } else {
+                el.className = 'feedback mt-4 p-4 rounded-lg border incorrect shadow-sm';
+                el.innerHTML = `<i class="fas fa-times-circle mr-2 text-xl text-rose-600"></i> ${message}`;
+            }
+        }
+
+        // Validación genérica para un solo input
+        function checkSimple(inputId, correctAnswer, feedbackId, successMsg) {
+            const val = parseFloat(document.getElementById(inputId).value);
+            if (isNaN(val)) {
+                showFeedback(feedbackId, false, "Por favor, escribe un número.");
+                return;
+            }
+            if (val === correctAnswer) {
+                showFeedback(feedbackId, true, successMsg);
+            } else {
+                showFeedback(feedbackId, false, "El cálculo no es exacto. Revisa tus sumas y divisiones.");
+            }
+        }
+
+        // Validador Ejercicio 1
+        function checkEx1() {
+            const sum = parseFloat(document.getElementById('ex1_sum').value);
+            const n = parseFloat(document.getElementById('ex1_n').value);
+            const ans = parseFloat(document.getElementById('ex1_ans').value);
+            
+            if (isNaN(sum) || isNaN(n) || isNaN(ans)) {
+                showFeedback('feedback1', false, "Completa todos los pasos."); return;
+            }
+            if (sum === 48 && n === 4 && ans === 12) {
+                showFeedback('feedback1', true, "¡Algoritmo perfecto! Sumaste 48, dividiste entre 4 datos, y el resultado es $12.");
+            } else if (sum !== 48) {
+                showFeedback('feedback1', false, "Paso 1 incorrecto. Vuelve a sumar los 4 precios.");
+            } else if (n !== 4) {
+                showFeedback('feedback1', false, "Paso 2 incorrecto. ¿Cuántos precios hay en la lista?");
+            } else {
+                showFeedback('feedback1', false, "La suma y la cantidad están bien, pero falló la división final.");
+            }
+        }
+
+        // Validador Ejercicio 2
+        function checkEx2() {
+            const sortStr = document.getElementById('ex2_sort').value.trim();
+            const ans = parseFloat(document.getElementById('ex2_ans').value);
+            
+            if (!sortStr || isNaN(ans)) {
+                showFeedback('feedback2', false, "Llena ambos cuadros."); return;
+            }
+            if (ans === 60) {
+                showFeedback('feedback2', true, "¡Muy bien! Al ordenarlos quedan (30, 45, 60, 90, 120), y el 60 está reinando en el centro.");
+            } else {
+                showFeedback('feedback2', false, "Ups. Asegúrate de ordenar bien de menor a mayor. Son 5 números, busca el tercero.");
+            }
+        }
+
+        // Validador Ejercicio 4
+        function checkEx4() {
+            const m1 = parseFloat(document.getElementById('ex4_m1').value);
+            const m2 = parseFloat(document.getElementById('ex4_m2').value);
+            const ans = parseFloat(document.getElementById('ex4_ans').value);
+            
+            if (isNaN(m1) || isNaN(m2) || isNaN(ans)) {
+                showFeedback('feedback4', false, "Completa los tres campos."); return;
+            }
+            
+            // Aceptar cualquier orden de m1 y m2
+            const centerCorrect = (m1 === 37 && m2 === 38) || (m1 === 38 && m2 === 37);
+            
+            if (centerCorrect && ans === 37.5) {
+                showFeedback('feedback4', true, "¡Excelente! Al ordenar (35,36,37,38,39,40), el 37 y 38 quedan en medio. Su promedio es 37.5.");
+            } else if (!centerCorrect) {
+                showFeedback('feedback4', false, "Los números del centro no son esos. Ordénalos primero: 35, 36...");
+            } else {
+                showFeedback('feedback4', false, "Encontraste el centro (37 y 38), pero calculaste mal el promedio de esos dos.");
+            }
+        }
+
+        // Validador Ejercicio 7
+        function checkEx7() {
+            const prom = parseFloat(document.getElementById('ex7_prom').value);
+            const med = parseFloat(document.getElementById('ex7_med').value);
+            
+            if (isNaN(prom) || isNaN(med)) {
+                showFeedback('feedback7', false, "Calcula ambas medidas."); return;
+            }
+            
+            if (prom === 10 && med === 3) {
+                showFeedback('feedback7', true, "¡Las dos perfectas! Suma 50 / 5 = 10. Ordenados (2,2,3,4,39), el centro es 3.");
+            } else if (prom !== 10) {
+                showFeedback('feedback7', false, "La mediana puede estar bien, pero revisa el Promedio (Suma todo y divide entre 5).");
+            } else {
+                showFeedback('feedback7', false, "El promedio está bien, pero revisa la Mediana. ¿Ordenaste los números primero?");
+            }
+        }
+
+        // Validador Ejercicio 10
+        function checkBoss() {
+            const p1 = parseFloat(document.getElementById('ex10_p1').value); // suma: 168
+            const p2 = parseFloat(document.getElementById('ex10_p2').value); // prom: 24
+            const m2 = parseFloat(document.getElementById('ex10_m2').value); // med: 24
+            const m1str = document.getElementById('ex10_m1').value.trim(); // ordenados
+            
+            if (isNaN(p1) || isNaN(p2) || isNaN(m2)) {
+                showFeedback('feedback10', false, "No dejes casillas numéricas en blanco."); return;
+            }
+            
+            if (p1 === 168 && p2 === 24 && m2 === 24) {
+                // Curiosidad: en este set, media y mediana son iguales!
+                showFeedback('feedback10', true, "¡CAMPEONA DEL GIMNASIO DE DATOS! 🏆 Calculaste los pasos perfectamente. Como dato curioso, en este ejercicio el Promedio y la Mediana dieron exactamente igual (24). Eso significa que el clima estuvo muy balanceado y no hubo datos extremos. ¡Felicidades!");
+            } else if (p1 !== 168) {
+                showFeedback('feedback10', false, "Misión Promedio: Fallaste en la Suma Total. Vuelve a sumar los 7 días.");
+            } else if (p2 !== 24) {
+                showFeedback('feedback10', false, "Misión Promedio: La suma está bien (168), pero la división final falló. Son 7 días.");
+            } else {
+                showFeedback('feedback10', false, "Misión Mediana: Revisa el número central. Ordena los 7 números, busca el cuarto.");
+            }
+        }
+    </script>
+</body>
+</html>
